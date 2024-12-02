@@ -11,6 +11,7 @@ Apple::Apple() {
 	pos.y = Play::RandomRollRange(radius, DISPLAY_HEIGHT - radius);
 }
 
+
 void Apple::draw() {
 	Play::DrawCircle({ pos.x, pos.y}, radius, Play::cRed);
 }

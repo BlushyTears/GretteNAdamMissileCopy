@@ -1,25 +1,9 @@
 #pragma once
-const int DISPLAY_WIDTH = 640;
-const int DISPLAY_HEIGHT = 360;
-const int DISPLAY_SCALE = 2;
+const int DISPLAY_WIDTH = 240;
+const int DISPLAY_HEIGHT = 160;
+const int DISPLAY_SCALE = 4;
 
-enum Heading {
-	NORTH,
-	SOUTH,
-	WEST,
-	EAST
-};
+const int NUM_BASES = 3;  // Example definition
+const int NUM_CITIES = 2;  // Example definition
 
-namespace MyPoint {
-	struct Point2D {
-		int x;
-		int y;
-	};
-}
-
-struct Color {
-	float r;
-	float g;
-	float b;
-};
 

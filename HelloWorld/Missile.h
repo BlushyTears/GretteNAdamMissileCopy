@@ -33,6 +33,7 @@ struct Explosion {
 void initExplosionList(Explosion& expl, size_t& initialCapacity);
 void initMissileList(Missile& missileList, size_t& initialCapacity);
 void addMisile(Missile& missileList, Play::Point2f _startingPos, Play::Point2f _endingPos, MyColor _myColor);
+void addExplosion(Explosion& expl, Play::Point2f explPos);
 void deleteMissile(Missile& missileList, size_t missileIndex);
 void cleanUpMissiles(Missile& missileList, Explosion& expl);
 void removeExplosion(Explosion& expl, size_t explIndex);

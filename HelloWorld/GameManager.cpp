@@ -87,19 +87,60 @@ void GameManager::drawData() {
 	// Draw all the hitmarkers for missiles here
 	for (int i = 0; i < missileList->missileCount; i++) {
 		Play::DrawCircle({ missileList->endingPositions[i].x, missileList->endingPositions[i].y }, 2,
-			{ missileList->colours[i].r, missileList->colours[i].g, missileList->colours[i].g });
+						 { missileList->colours[i].r, missileList->colours[i].g, missileList->colours[i].g });
+
 		// We probably wanna draw the missiles and their endpoints here
 	} 
 	for (int i = 0; i < explosionList->explosionCount; i++) {
-		Play::DrawCircle({ explosionList->explosionPositions[i].x, explosionList->explosionPositions[i].y}, 
-							explosionList->radiuses[i], Play::cRed);
+		Play::DrawCircle({ explosionList->explosionPositions[i].x, explosionList->explosionPositions[i].y }, 
+						   explosionList->radiuses[i], Play::cRed );
+
 		explosionList->radiuses[i]++;
+
+		for (int j = 0; j < missileList->missileCount; j++) {
+			if (i == j)
+				continue;
+			if (missileList->currentPositions[i].Length() - missileList->currentPositions[j].Length() < 12) {
+				Play::PlayAudio("Explode");
+				addExplosion(*explosionList, missileList->currentPositions[j]);
+				deleteMissile(*missileList, j);
+			}
+		}
+
 		if (explosionList->radiuses[i] >= 12) {
 			removeExplosion(*explosionList, i);
-			continue;
 		}
 	}
 }
+
+//;
+//deleteMissile(missileList, i);
+
+//void Missile::Explode(int missileIndex)
+//{
+//	AddExplosion(missileIndex);
+//	Play::PlayAudio("Explode");
+//
+//	//system->CheckExplosion(position[missileIndex], maxRadius);
+//
+//	// Loop through missiles
+//	for (int j = 0; j < missileCount; j++)
+//	{
+//		bool expl = false;
+//		// As long as it's not already exploded
+//		for (int k = 0; k < explosionCount; k++)
+//		{
+//			if (j == hasExploded[k])
+//			{
+//				expl = true;
+//			}
+//		}
+//		if (!expl && (position[j] - position[missileIndex]).Length() < maxRadius)
+//		{
+//			Explode(j);
+//		}
+//	}
+//}
 
 // References to drawing missile stuff
 //void Missile::Draw()

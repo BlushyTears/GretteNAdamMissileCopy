@@ -2,9 +2,6 @@
 #include "Play.h"
 #include "constants.h"
 
-//#define NUM_CITIES 2 // Since we know there are always two adjacent cities we can define it up here
-//#define NUM_BASES 3 // Since we know there are always two adjacent cities we can define it up here
-
 // Here we prototype structs and functions separately
 struct Base {
 	int* health;

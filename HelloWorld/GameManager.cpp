@@ -13,9 +13,11 @@ GameManager::GameManager() {
 	// Allocate memory for missileBasesList
 	GameManager::missileBasesList = new MissileBase*[NUM_BASES];
 	missileList = new Missile;
+	explosionList = new Explosion;
 	size_t initialCapacity = 16;
 
 	initMissileList(*missileList, initialCapacity);
+	initExplosionList(*explosionList, initialCapacity);
 
 	for (int i = 0; i < NUM_BASES; i++) {
 		missileBasesList[i] = nullptr;
@@ -28,7 +30,7 @@ GameManager::~GameManager() {
 		delete missileBasesList[i];
 	}
 	delete[] missileBasesList;
-	cleanUpMissiles(*missileList);
+	cleanUpMissiles(*missileList, *explosionList);
 	delete[] missileList;
 }
 
@@ -55,7 +57,7 @@ void GameManager::frame(float elapsedTime) {
 		}
 	}
 
-	updateMissilesPositions(*missileList, elapsedTime);
+	updateMissilesPositions(*missileList, *explosionList, elapsedTime);
 	drawData();
 	Play::Point2D mp = Play::Input::GetMousePos();
 	Play::DrawLine({ mp.x - rhs, mp.y }, { mp.x + rhs, mp.y }, Play::cGreen);
@@ -86,9 +88,17 @@ void GameManager::drawData() {
 	for (int i = 0; i < missileList->missileCount; i++) {
 		Play::DrawCircle({ missileList->endingPositions[i].x, missileList->endingPositions[i].y }, 2,
 			{ missileList->colours[i].r, missileList->colours[i].g, missileList->colours[i].g });
-
 		// We probably wanna draw the missiles and their endpoints here
 	} 
+	for (int i = 0; i < explosionList->explosionCount; i++) {
+		Play::DrawCircle({ explosionList->explosionPositions[i].x, explosionList->explosionPositions[i].y}, 
+							explosionList->radiuses[i], Play::cRed);
+		explosionList->radiuses[i]++;
+		if (explosionList->radiuses[i] >= 12) {
+			removeExplosion(*explosionList, i);
+			continue;
+		}
+	}
 }
 
 // References to drawing missile stuff

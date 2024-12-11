@@ -14,16 +14,20 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 	Play::CreateManager(DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_SCALE);
 }
 
-// Notes for monday:
+// Todo high level:
+// Add explosion effect when missile is deleted (or after, not sure) 
+// Add missile chaining
+// Add ammo and text under each base
+// Separate shoting positions to be from each base based on the x-axis
+// Add enemy hailfire when all buildings are destroyed
 // 
-// - Calculate direction of the missile
-// - Apply velocity to missiles based on starting pos (hardcode this for now) to ending pos
-// - Draw missile (Drawline() function) based on trajectory
-// - WHen missile hits its target, delete it and maybe make explosion effect
-// - The explosion compares radiuses with other missiles and if another entity is within, then that missile also runs an explode function
-// - The above loop also checks for nearby cities, which if within radius has their destroyed bool set to true and rubble is drawn instead
-// - if all cities and missile bases are destroyed, game is over (maybe add missile rain if time allows)
 
+// Low level things to do that isn't implicitly suggested by the above:
+// Add rendering class for drawing and migrate existing relevant code there
+// Change missileBaseList to be actually dynamic and not an object
+// 
+//	-------------------------------------------------------------------------------------------------
+// 
 // Todo list (things idc about but should be done at some point to simplify code):
 // - Put spriteID in parrent class instead
 

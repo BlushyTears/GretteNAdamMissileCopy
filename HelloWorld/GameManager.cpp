@@ -100,8 +100,7 @@ void GameManager::drawData() {
 		for (int j = 0; j < missileList->missileCount; j++) {
 			if (i == j)
 				continue;
-			if (missileList->currentPositions[i].Length() - missileList->currentPositions[j].Length() < 12) {
-				Play::PlayAudio("Explode");
+			if (missileList->currentPositions[j].Length() - missileList->currentPositions[i].Length() <= explosionList->radiuses[i]++) {
 				addExplosion(*explosionList, missileList->currentPositions[j]);
 				deleteMissile(*missileList, j);
 			}

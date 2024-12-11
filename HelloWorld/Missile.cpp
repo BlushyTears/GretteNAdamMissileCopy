@@ -30,6 +30,7 @@ void addExplosion(Explosion& expl, Play::Point2f explPos) {
 	expl.explosionPositions[expl.explosionCount] = explPos;
 	expl.radiuses[expl.explosionCount] = 0;
 	expl.explosionCount++;
+	Play::PlayAudio("Explode");
 }
 
 void removeExplosion(Explosion& expl, size_t explIndex) {
@@ -153,7 +154,6 @@ void updateMissilesPositions(Missile& missileList, Explosion& expl, float deltat
 			if (missileList.distancesTravelled[i] >= (missileList.startingPositions[i] - missileList.endingPositions[i]).Length()) {
 				addExplosion(expl, missileList.currentPositions[i]);
 				deleteMissile(missileList, i);
-				Play::PlayAudio("Explode");
 			}
 		}
 	}

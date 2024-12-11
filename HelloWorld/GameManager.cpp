@@ -11,39 +11,22 @@ const int rhs = 2; // rhs = reticleHalfSize
 // Constructor
 GameManager::GameManager() {
 	// Allocate memory for missileBasesList
-	GameManager::missileBasesList = new MissileBase*[NUM_BASES];
+	missileBasesList = new MissileBase;
 	missileList = new Missile;
 	explosionList = new Explosion;
 	size_t initialCapacity = 16;
 
+	initMissileBases(*missileBasesList, initialCapacity); // missile bases probably better off having a capacity of 4
 	initMissileList(*missileList, initialCapacity);
 	initExplosionList(*explosionList, initialCapacity);
-
-	for (int i = 0; i < NUM_BASES; i++) {
-		missileBasesList[i] = nullptr;
-	}
 }
 
 GameManager::~GameManager() {
-	for (int i = 0; i < NUM_BASES; i++) {
-		deallocateData(*missileBasesList[i]);
-		delete missileBasesList[i];
-	}
-	delete[] missileBasesList;
+	deallocateData(*missileBasesList);
 	cleanUpMissiles(*missileList, *explosionList);
-	delete[] missileList;
-}
-
-// This function initiate stuff and add spacing between the Buildings
-void GameManager::setupGame() {
-	float usableWidth = DISPLAY_WIDTH * 2 / 3;
-	float startX = DISPLAY_WIDTH / 6;
-	float spacing = usableWidth / (NUM_BASES - 1);
-
-	for (int i = 0; i < NUM_BASES; i++) {
-		float xPos = startX + spacing * i; 
-		missileBasesList[i] = initMissileBase({ xPos, DISPLAY_HEIGHT / 7 });
-	}
+	delete missileBasesList;
+	delete missileList;
+	delete explosionList;
 }
 
 // Called 60 times a second
@@ -68,20 +51,23 @@ void GameManager::frame(float elapsedTime) {
 void GameManager::drawData() {
 	Play::DrawRect(Play::Point2D(0, 0), Play::Point2D(DISPLAY_WIDTH, DISPLAY_HEIGHT / 7), Play::cYellow, true);
 
+	// draw bases and their adjacent cities
 	for (int i = 0; i < 3; i++) {
-		Play::DrawSprite(spriteTable[missileBasesList[i]->spriteID],
-			{ missileBasesList[i]->missileBase->pos->x, missileBasesList[i]->missileBase->pos->y
-		}, 0);
+		Play::DrawSprite(spriteTable[*(missileBasesList->missileBase[i]->spriteID)],
+			{ 
+				missileBasesList->missileBase[i]->pos->x,
+				missileBasesList->missileBase[i]->pos->y
+			}
+		, 0);
+	}
 
-		Play::DrawSprite(spriteTable[missileBasesList[i]->adjCities->spriteID],
-			{ missileBasesList[i]->missileBase->pos->x + 20,
-					missileBasesList[i]->missileBase->pos->y
-		}, 0);
-
-		Play::DrawSprite(spriteTable[missileBasesList[i]->adjCities->spriteID],
-			{ missileBasesList[i]->missileBase->pos->x - 20,
-					missileBasesList[i]->missileBase->pos->y
-		}, 0);
+	for (int i = 0; i < 6; i++) {
+		Play::DrawSprite(spriteTable[*(missileBasesList->adjCities[i]->spriteID)],
+			{ 
+				missileBasesList->adjCities[i]->pos->x,
+				missileBasesList->adjCities[i]->pos->y
+			}
+		, 0);
 	}
 
 	// Draw all the hitmarkers for missiles here
@@ -95,8 +81,6 @@ void GameManager::drawData() {
 		Play::DrawCircle({ explosionList->explosionPositions[i].x, explosionList->explosionPositions[i].y }, 
 						   explosionList->radiuses[i], Play::cRed );
 
-		explosionList->radiuses[i]++;
-
 		for (int j = 0; j < missileList->missileCount; j++) {
 			if (i == j)
 				continue;
@@ -106,79 +90,9 @@ void GameManager::drawData() {
 			}
 		}
 
-		if (explosionList->radiuses[i] >= 10) {
+		if (explosionList->radiuses[i] >= 12) {
 			removeExplosion(*explosionList, i);
 		}
+		explosionList->radiuses[i]++;
 	}
 }
-
-//;
-//deleteMissile(missileList, i);
-
-//void Missile::Explode(int missileIndex)
-//{
-//	AddExplosion(missileIndex);
-//	Play::PlayAudio("Explode");
-//
-//	//system->CheckExplosion(position[missileIndex], maxRadius);
-//
-//	// Loop through missiles
-//	for (int j = 0; j < missileCount; j++)
-//	{
-//		bool expl = false;
-//		// As long as it's not already exploded
-//		for (int k = 0; k < explosionCount; k++)
-//		{
-//			if (j == hasExploded[k])
-//			{
-//				expl = true;
-//			}
-//		}
-//		if (!expl && (position[j] - position[missileIndex]).Length() < maxRadius)
-//		{
-//			Explode(j);
-//		}
-//	}
-//}
-
-// References to drawing missile stuff
-//void Missile::Draw()
-//{
-//	Play::Vector2D direction = this->GetTravellingDirection();
-//
-//	Play::Point2D endPoint = this->origin + direction * distanceTravelled;
-//
-//	Play::DrawLine(this->origin, endPoint, this->colour);
-//
-//	const Play::Colour colours[4] = {
-//		Play::cWhite,
-//		Play::cRed,
-//		Play::cBlue,
-//		Play::cYellow
-//	};
-//
-//	this->alternateColour = (this->alternateColour + 1) % 8;
-//	int colourIndex = this->alternateColour / 2;
-//
-//	Play::DrawPixel(endPoint, colours[colourIndex]);
-//
-//	// Draw Target
-//	Play::DrawCircle(this->target, 2, this->colour);
-//}
-//
-//void Missile::Simulate(float elapsedTime)
-//{
-//	this->distanceTravelled += this->speed * elapsedTime;
-//	Play::Vector2D direction = this->GetTravellingDirection();
-//	Play::Point2D currentPosition = this->origin + direction * distanceTravelled;
-//	this->SetPosition(currentPosition);
-//
-//	if (distanceTravelled >= GetDistanceFromOriginToTarget() || this->IsDestroyed())
-//	{
-//		Explosion* explosion = new Explosion(this->GetPosition());
-//		this->gameStateManager->AddGameObject(explosion);
-//
-//		// Destroy this object
-//		this->ScheduleDelete();
-//	}
-//}

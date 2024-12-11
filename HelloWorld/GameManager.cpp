@@ -100,13 +100,13 @@ void GameManager::drawData() {
 		for (int j = 0; j < missileList->missileCount; j++) {
 			if (i == j)
 				continue;
-			if (missileList->currentPositions[j].Length() - missileList->currentPositions[i].Length() <= explosionList->radiuses[i]++) {
+			if (abs(missileList->currentPositions[j].Length() - explosionList->explosionPositions[i].Length()) <= explosionList->radiuses[i]) {
 				addExplosion(*explosionList, missileList->currentPositions[j]);
 				deleteMissile(*missileList, j);
 			}
 		}
 
-		if (explosionList->radiuses[i] >= 12) {
+		if (explosionList->radiuses[i] >= 10) {
 			removeExplosion(*explosionList, i);
 		}
 	}

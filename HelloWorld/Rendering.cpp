@@ -44,34 +44,5 @@ void Rendering::renderStuff(MissileBase& missileBasesList, Missile& missileList,
 		, 0);
 	}
 
-	// Draw all the reticle for each missile here
-	for (int i = 0; i < missileList.missileCount; i++) {
-		Play::DrawCircle({ missileList.endingPositions[i].x, missileList.endingPositions[i].y }, 2,
-			{ Play::cBlue });
 
-		Play::Vector2D direction = (missileList.endingPositions[i] - missileList.startingPositions[i]);
-		direction.Normalize();
-		missileList.currentPositions[i] = missileList.startingPositions[i] + direction * missileList.distancesTravelled[i];
-
-		Play::Point2D endPoint = missileList.startingPositions[i] + direction * missileList.distancesTravelled[i];
-		Play::DrawLine(missileList.startingPositions[i], endPoint,
-			{missileList.colours[i].r, missileList.colours[i].g, missileList.colours[i].b });
-		Play::DrawPixel(endPoint, Play::cGreen); // maybe vary this with red and blue or something
-	}
-	// We probably wanna draw the missiles and their endpoints before the explosions
-	for (int i = 0; i < explosionList.explosionCount; i++) {
-		Play::DrawCircle({ explosionList.explosionPositions[i].x, explosionList.explosionPositions[i].y },
-			explosionList.radiuses[i], Play::cRed);
-
-		for (int j = 0; j < missileList.missileCount; j++) {
-			if (abs(missileList.currentPositions[j].Length() - explosionList.explosionPositions[i].Length()) <= explosionList.radiuses[i]) {
-				addExplosion(explosionList, missileList.currentPositions[j]);
-				deleteMissile(missileList, j);
-			}
-		}
-		if (explosionList.radiuses[i] >= 10) {
-			removeExplosion(explosionList, i);
-		}
-		explosionList.radiuses[i]++;
-	}
 }

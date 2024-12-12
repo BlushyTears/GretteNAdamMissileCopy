@@ -21,10 +21,9 @@ struct Base {
 // todo: put spriteID in parrent class when we have something working
 struct MissileBase {
 	Base* missileBase[3];
-	Base* adjCities[6]; // fixed, since we know missile base will always have two adjacent cities
+	Base* adjCities[6];
 	int currentBaseCount;
-	//int* currentAmmo;
-	//const int maxAmmo;
+	int* currentAmmo;
 };
 
 void initMissileBases(MissileBase& missileBase, size_t initialCapacity);

@@ -8,6 +8,8 @@ void initMissileBases(MissileBase& missileBase, size_t initialCapacity) {
     float spacing = usableWidth / (NUM_BASES - 1);
     float citySpacing = usableWidth / (NUM_CITIES - 1);
 
+    missileBase.currentAmmo = new int[initialCapacity]; // fields exclusive to missileBase do not need to be allocated in loop (only assigned)
+
     // Initialize missile bases
     for (int i = 0; i < NUM_BASES; i++) {
         float xPos = startX + spacing * i;
@@ -16,6 +18,7 @@ void initMissileBases(MissileBase& missileBase, size_t initialCapacity) {
         missileBase.missileBase[i]->pos = new Play::Point2D[initialCapacity]{ {xPos, DISPLAY_HEIGHT / 7} };
         missileBase.missileBase[i]->isDestroyed = new bool[initialCapacity] {false};
         missileBase.missileBase[i]->spriteID = new int[initialCapacity] {1};
+        missileBase.currentAmmo[i] = 10;
     }
 
     // Initialize adjacent cities

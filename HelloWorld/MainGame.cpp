@@ -14,21 +14,21 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 }
 
 // Todo high level:
-// Add ammo and text under each base
-// Separate shoting positions to be from each base based on the x-axis
-// Add enemy normal fire during game loop
-// Add enemy hailfire when all buildings are destroyed
-// 
+// Add ammo count
+// Add different shoting locations
+// Add enemy missiles plus marker showing their end destination
+// Add hellfire when game ends (Called when all building has their boolean isDestroyed set to true) (extra)
+// Add tip of missile and make it vary colors (extra)
+// Add variying coloring for explosion (extra)
+// Remove memory leaks (extra)
 
 // Low level things to do that isn't implicitly suggested by the above:
-// Add rendering class for drawing and migrate existing relevant code there
-// Change missileBaseList to be actually dynamic and not an object
-// Put spriteID in parrent class instead
-//	-------------------------------------------------------------------------------------------------
+// When buildings collide with explosion radius it should take damage (should be a very simple 5 lines of code)
+// -------------------------------------------------------------------------------------------------
 
 // Endpoint here gives us the tip of the missile, probably where we want to draw the missile itself (A point that varies its color)
-//Play::Point2D endPoint = this->origin + direction * distanceTravelled;
-//Play::DrawLine(this->origin, endPoint, this->colour);
+// Play::Point2D endPoint = this->origin + direction * distanceTravelled;
+// Play::DrawLine(this->origin, endPoint, this->colour);
 
 bool MainGameUpdate( float elapsedTime )
 {
@@ -50,12 +50,7 @@ int MainGameExit( void )
 // The base can shot a missile at a time which also creates a reticle
 // followed by an explosion 
 
-// Also, remove the linked list, because it's slower and doesn't make sense to keep all objects within a linked list.
-// It's better to have a bunch of specific lists and through that rely on caching to optimize things.
-
-
-
 // Don't remove this because it's frustrating to look up over and over again
-//std::string tempString = "Missile count: " + std::to_string(missileList->missileCount);
-//const char* myArray = tempString.c_str();
-//Play::DrawDebugText({ 300, 400 }, myArray, Play::cBlue, true);
+// std::string tempString = "Missile count: " + std::to_string(missileList->missileCount);
+// const char* myArray = tempString.c_str();
+// Play::DrawDebugText({ 300, 400 }, myArray, Play::cBlue, true);

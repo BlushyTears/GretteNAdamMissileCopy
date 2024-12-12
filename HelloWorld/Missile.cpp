@@ -1,5 +1,6 @@
 #include "Missile.h"
 #include "Play.h"
+#include "constants.h"
 
 void initExplosionList(Explosion& expl, size_t& initialCapacity) {
 	expl.explosionPositions = new Play::Point2f[initialCapacity];
@@ -54,6 +55,19 @@ void initMissileList(Missile& missileList, size_t& initialCapacity) {
 
 	missileList.missileCount = 0;
 	missileList.missileCapacity = initialCapacity;
+}
+
+void updateMissilesPositions(Missile& missileList, Explosion& expl, float deltatime) {
+	if (missileList.missileCount > 0) {
+		for (int i = 0; i < missileList.missileCount; i++) {
+			missileList.distancesTravelled[i] += 20 * deltatime;
+
+			if (missileList.distancesTravelled[i] >= (missileList.startingPositions[i] - missileList.endingPositions[i]).Length()) {
+				addExplosion(expl, missileList.currentPositions[i]);
+				deleteMissile(missileList, i);
+			}
+		}
+	}
 }
 
 void addMisile(Missile& missileList, Play::Point2f _startingPos, Play::Point2f _endingPos, MyColor _myColor) {
@@ -122,43 +136,6 @@ void deleteMissile(Missile& missileList, size_t missileIndex) {
 	}
 }
 
-// 0, 1, 2, 3
-// addMissile(4) ->
-// 0, 1, 2, 3, 4
-// deleteMissile(2) ->
-// 0, 1,  
-
-// This is probably a good implementation, but we aren't doing radius checking yet, so it's wrong biz logic
-//void checkChain(Missile& missileList, int i) {
-//	if (missileList.distancesTravelled[i] >= (missileList.startingPositions[i] - missileList.endingPositions[i]).Length()) {
-//		missileList.missilesToBeDestroyed[i] = true;
-//		checkChain(missileList, i + 1);
-//	}
-//}
-
-void updateMissilesPositions(Missile& missileList, Explosion& expl, float deltatime) {
-	if (missileList.missileCount > 0) {
-		for (int i = 0; i < missileList.missileCount; i++) {
-			missileList.distancesTravelled[i] += 20 * deltatime;
-
-			Play::Vector2D direction = (missileList.endingPositions[i] - missileList.startingPositions[i]);
-			direction.Normalize();
-			Play::Vector2D velocity = direction * 1; // the 1 is hardcoded for speed, maybe refactor l8er
-			missileList.currentPositions[i] += velocity * deltatime;
-			missileList.currentPositions[i] = missileList.startingPositions[i] + direction * missileList.distancesTravelled[i];
-
-			// We probably wanna draw the endpoint of the missile here too
-			Play::Point2D endPoint = missileList.startingPositions[i] + direction * missileList.distancesTravelled[i];
-			Play::DrawLine(missileList.startingPositions[i], endPoint, Play::cRed);
-
-			if (missileList.distancesTravelled[i] >= (missileList.startingPositions[i] - missileList.endingPositions[i]).Length()) {
-				addExplosion(expl, missileList.currentPositions[i]);
-				deleteMissile(missileList, i);
-			}
-		}
-	}
-}
-
 // void delete missile function here when it explodes
 void cleanUpMissiles(Missile& missileList, Explosion& expl) {
 	delete[] missileList.startingPositions;
@@ -167,7 +144,6 @@ void cleanUpMissiles(Missile& missileList, Explosion& expl) {
 	delete[] missileList.colours;
 	delete[] missileList.distancesTravelled;
 
-	// i'm too lazy to put these within its own function (if that's even a good idea)
 	delete[] expl.explosionPositions;
 	delete[] expl.radiuses;
 }

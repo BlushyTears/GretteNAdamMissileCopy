@@ -204,6 +204,7 @@
     <ClCompile Include="Missile.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp17</LanguageStandard>
     </ClCompile>
+    <ClCompile Include="Rendering.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Play.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Buildings.h" />
     <ClInclude Include="Missile.h" />
+    <ClInclude Include="Rendering.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

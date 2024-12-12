@@ -1,6 +1,7 @@
 #pragma once
 #include "Buildings.h"
 #include "Missile.h"
+#include "Rendering.h"
 
 class GameManager
 {
